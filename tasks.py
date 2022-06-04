@@ -47,5 +47,6 @@ def clean(c):
 @task
 def test(c, verbose=True):
     print("Running tests!")
-    with c.cd(f'{str(build_path)}/tests/unit_tests'):
-        c.run('pytest')
+    with c.cd(f'{str(root_path)}/tests'):
+        c.run('ls')
+        c.run('pytest tests.py', pty=True)
