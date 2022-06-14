@@ -30,13 +30,13 @@ def configure(c, mode="Debug"):
     with c.cd(str(build_path)):
         c.run('mkdir -p install')
         generator = f'-G Ninja'
-        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install {generator}")
+        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install {generator} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
 @task(pre=[configure])
 def build(c):
     print("Building!")
-    with c.cd(str(build_path)):
-        c.run(f"ninja -j8 && ninja install")
+    with c.cd(str(build_path)): 
+        c.run(f"ninja -j0 && ninja install")
 
 @task
 def clean(c):
@@ -45,8 +45,8 @@ def clean(c):
         c.run(f"rm -rf build/*")
 
 @task
-def test(c, verbose=True):
+def test(c, k=None, verbose=True):
     print("Running tests!")
     with c.cd(f'{str(root_path)}/tests'):
-        c.run('ls')
-        c.run('pytest tests.py', pty=True)
+        test_defs = f'-k {k}' if k else ''
+        c.run(f'pytest -s tests.py {test_defs}', pty=True)

@@ -1,19 +1,20 @@
+#include <array>
+#include <graphics/Graphics.hpp>
 #include <iostream>
 #include <map>
-
-/**
- * @brief new class for testing
- *
- */
-class MyClass {
-   protected:
-    /// my variable
-    int num;
-    /// Meu casal
-    std::string name;
-};
+#include <memory>
 
 int main() {
+    graphics::initialize();
+
+    std::shared_ptr<graphics::Renderer> renderer =
+        std::make_shared<graphics::Renderer>(
+            std::make_shared<graphics::Window>("window", 400, 600));
+
+    renderer->add_renderable(std::make_shared<graphics::Line>(
+        std::array<int, 2>{0, 0}, std::array<int, 2>{100, 100}));
+    renderer->run();
+
     std::map<std::string, int> m;
     m["test"] = 1;
     m["test2"] = 4;
@@ -22,5 +23,6 @@ int main() {
         std::cout << name << " - " << total << "\n";
     }
     std::cout << "Project test\n";
+    graphics::finalize();
     return 0;
 }
