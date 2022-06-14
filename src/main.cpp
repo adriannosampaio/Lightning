@@ -1,8 +1,10 @@
 #include <array>
-#include <graphics/Graphics.hpp>
 #include <iostream>
 #include <map>
 #include <memory>
+
+#include "graphics/Graphics.hpp"
+#include "graphics/Renderable.hpp"
 
 int main() {
     graphics::initialize();
@@ -11,8 +13,9 @@ int main() {
         std::make_shared<graphics::Renderer>(
             std::make_shared<graphics::Window>("window", 400, 600));
 
-    renderer->add_renderable(std::make_shared<graphics::Line>(
-        std::array<int, 2>{0, 0}, std::array<int, 2>{100, 100}));
+    auto line = std::make_shared<graphics::Line>(
+        std::array<int, 2>{0, 0}, std::array<int, 2>{100, 100});
+    renderer->add_renderable(line);
     renderer->run();
 
     std::map<std::string, int> m;

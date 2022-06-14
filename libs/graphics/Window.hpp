@@ -3,7 +3,6 @@
 #include <SDL_image.h>
 #include <SDL_timer.h>
 
-#include <Eigen/Dense>
 #include <memory>
 #include <utility>
 

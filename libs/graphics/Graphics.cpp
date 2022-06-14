@@ -1,9 +1,6 @@
-#define SDL_MAIN_HANDLED  // insert this
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_timer.h>
+#include "Graphics.hpp"
 
-#include "Window.hpp"
+#include <SDL.h>
 
 namespace graphics {
 
