@@ -17,13 +17,14 @@ add_subdirectory(tests/unit_tests)
 
 # graphics library
 add_subdirectory(libs/graphics)
+add_subdirectory(libs/physics)
 
-file(GLOB SOURCES src/main.cpp)
+file(GLOB SOURCES src/*)
 add_executable (Lightning ${SOURCES})
 target_include_directories(Lightning PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 target_link_libraries(Lightning PUBLIC  ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
-target_include_directories(Lightning PRIVATE libs)
-target_link_libraries(Lightning PUBLIC Eigen3::Eigen SDL_Wrapper)
+target_include_directories(Lightning PRIVATE libs src)
+target_link_libraries(Lightning PUBLIC Eigen3::Eigen Graphics Physics)
 
 
 install(TARGETS Lightning DESTINATION bin)
