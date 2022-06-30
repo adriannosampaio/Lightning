@@ -40,8 +40,8 @@ struct DomainParameters {
 
     inline Eigen::Vector3i coords_to_cell(const Eigen::Vector3d& coords) const {
         return {
-            static_cast<int>(coords[0]) / number_of_cells[0],
-            static_cast<int>(coords[1]) / number_of_cells[1],
-            static_cast<int>(coords[2]) / number_of_cells[2]};
+            static_cast<int>(std::floor(coords[0] / cell_dimensions[0])),
+            static_cast<int>(std::floor(coords[1] / cell_dimensions[1])),
+            static_cast<int>(std::floor(coords[2] / cell_dimensions[2]))};
     }
 };
