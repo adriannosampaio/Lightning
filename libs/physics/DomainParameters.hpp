@@ -5,9 +5,9 @@
 
 struct DomainParameters {
     Eigen::Vector3d dimensions;
+    Eigen::Vector3i number_of_cells;
     Eigen::Vector3d cell_dimensions;
     Eigen::Vector3d cell_center_offset;
-    Eigen::Vector3i number_of_cells;
     int number_of_cells_in_xy_plane;
 
     DomainParameters(const Eigen::Vector3d& dims, const Eigen::Vector3i& ncs) :
@@ -24,8 +24,8 @@ struct DomainParameters {
     inline Eigen::Vector3d cell_index_to_cell_center(int index) const {
         int z_index = index / number_of_cells_in_xy_plane;
         int y_index =
-            (index % number_of_cells_in_xy_plane) / number_of_cells[1];
-        int x_index = index % number_of_cells[1];
+            (index % number_of_cells_in_xy_plane) / number_of_cells[0];
+        int x_index = index % number_of_cells[0];
         return {
             x_index * cell_dimensions[0] + cell_center_offset[0],
             y_index * cell_dimensions[1] + cell_center_offset[1],
