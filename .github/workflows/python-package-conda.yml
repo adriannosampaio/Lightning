@@ -24,5 +24,6 @@ jobs:
         conda devenv
     - name: Compile
       run: |
+        conda activate lightning
         inv build
 
