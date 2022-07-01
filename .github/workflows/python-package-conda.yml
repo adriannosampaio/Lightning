@@ -22,7 +22,7 @@ jobs:
       run: |
         conda install conda-devenv -c conda-forge
         conda install mamba -c conda-forge  
-        conda devenv --env-manager mamba
+        conda devenv
         conda init
     - name: Compile
       run: |
