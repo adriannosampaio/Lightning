@@ -21,7 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         conda install conda-devenv -c conda-forge
-        conda devenv
+        conda install mamba -c conda-forge  
+        conda devenv --env-manager mamba
+        conda init
     - name: Compile
       run: |
         conda activate lightning
