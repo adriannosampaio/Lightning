@@ -30,12 +30,14 @@ jobs:
       shell: bash -l {0}
       run: printenv | sort
     - name: Install dependencies
+      shell: bash -l {0}
       run: |
         conda install conda-devenv -c conda-forge
         conda install mamba -c conda-forge  
         conda devenv
         
     - name: Compile
+      shell: bash -l {0}
       run: |
         conda activate lightning
         inv build
