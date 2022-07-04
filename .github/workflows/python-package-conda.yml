@@ -27,8 +27,7 @@ jobs:
         conda install conda-devenv -c conda-forge
         conda install mamba -c conda-forge  
         conda devenv
-        conda env --list
-        
+        conda env list
     - name: Compile
       shell: bash -l {0}
       run: |
