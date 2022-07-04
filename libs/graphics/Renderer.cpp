@@ -1,13 +1,21 @@
 #include "Renderer.hpp"
 
+#include <SDL_image.h>
+
+#include <memory>
+#include <string>
+
+#include "Window.hpp"
 namespace graphics {
 
-Renderer::Renderer(std::shared_ptr<graphics::Window> window) :
-    _window(window) {}
+Renderer::Renderer() {}
 
 Renderer::~Renderer() {}
 
-void Renderer::run() {
+void Renderer::run(const std::string& title, unsigned width, unsigned height) {
+    // Create the window to be used
+    auto window = std::make_shared<graphics::Window>(title, width, height);
+    auto renderer = window->get_renderer();
     bool finished = false;
     while (!finished) {
         SDL_Event event;
@@ -22,11 +30,31 @@ void Renderer::run() {
                 }
             }
         }
-        SDL_SetRenderDrawColor(_window->get_renderer(), 0, 0, 0, 255);
-        SDL_RenderClear(_window->get_renderer());
-        this->render_objects();
-        SDL_RenderPresent(_window->get_renderer());
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        this->render_objects(renderer);
+        SDL_RenderPresent(renderer);
     }
+}
+
+void Renderer::generate_image(
+    const std::string& filename, unsigned width, unsigned height) {
+    // Allocating a new surface canvas
+    SDL_Surface* surface =
+        SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+    // Creating a software renderer to avoid creating a window
+    SDL_Renderer* renderer = SDL_CreateSoftwareRenderer(surface);
+    // Cleaning the canvas
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    // Rendering objects
+    this->render_objects(renderer);
+    // Save the actual image
+    IMG_SavePNG(surface, filename.c_str());
+    // Free the new surface
+    SDL_FreeSurface(surface);
+    // DEstroy the software renderer
+    SDL_DestroyRenderer(renderer);
 }
 
 void Renderer::add_renderable(std::shared_ptr<graphics::Renderable> object) {

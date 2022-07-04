@@ -34,6 +34,11 @@ class Line : public Renderable {
     void render(SDL_Renderer* renderer) const override;
 };
 
+/**
+ * @brief Class responsible for rendering a single pixel in
+ * the window
+ *
+ */
 class Pixel : public Renderable {
    private:
     std::array<int, 2> _position;
