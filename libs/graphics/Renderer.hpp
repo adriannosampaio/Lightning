@@ -4,29 +4,24 @@
 #include <vector>
 
 #include "Renderable.hpp"
-#include "Window.hpp"
 
 namespace graphics {
 class Renderer {
    private:
     /**
-     * @brief Store the SDL window wrapper
-     *
-     */
-    std::shared_ptr<graphics::Window> _window;
-    /**
      * @brief store a list of objects to be rendered in the SDL window
      *
      */
     std::vector<std::shared_ptr<graphics::Renderable>> _renderable_objects;
+
     /**
      * @brief Iterate through the list of Renderable objects and render
-     * them in the window
+     * them in the specified SDL_Renderer object
      *
      */
-    void render_objects() {
+    void render_objects(SDL_Renderer* renderer) {
         for (auto object_ptr : _renderable_objects) {
-            object_ptr->render(_window->get_renderer());
+            object_ptr->render(renderer);
         }
     }
 
@@ -36,12 +31,22 @@ class Renderer {
      *
      * @param window
      */
-    explicit Renderer(std::shared_ptr<graphics::Window> window);
+    explicit Renderer();
+
     /**
      * @brief Start running the SDL window
      *
      */
-    void run();
+    void run(const std::string& title, unsigned width, unsigned height);
+
+    /**
+     * @brief Saves an image instead of rendering it into a window
+     *
+     * @param filename
+     */
+    void generate_image(
+        const std::string& filename, unsigned width, unsigned height);
+
     /**
      * @brief Add a new Renderable object to the list of objects
      * to be rendered

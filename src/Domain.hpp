@@ -35,6 +35,8 @@ class Domain {
 
     void generate_field() { _field->generate_field(_charges); }
 
+    std::vector<double> get_field() { return _field->get_field_data(); }
+
     std::shared_ptr<Lightning> generate_path(int seed = 0) {
         auto root = std::make_shared<PathPoint>(100, 0, 100);
         root->add_child(std::make_shared<PathPoint>(200, 0, 200));

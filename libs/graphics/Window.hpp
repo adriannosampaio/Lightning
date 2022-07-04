@@ -53,6 +53,7 @@ class Window {
      *
      */
     Window();
+
     /**
      * @brief Construct a new Window object and allocate
      *   SDL objects.
@@ -75,6 +76,20 @@ class Window {
      * @return std::shared_ptr<SDL_Renderer, internal::RendererDeleter>
      */
     SDL_Renderer* get_renderer() { return _renderer.get(); }
+
+    /**
+     * @brief Get the pointer to an SDL window object
+     *
+     * @return std::shared_ptr<SDL_Renderer, internal::RendererDeleter>
+     */
+    SDL_Window* get_window() { return _window.get(); }
+
+    /**
+     * @brief Get the dimensions of the window object
+     *
+     * @return const std::array<unsigned, 2>&
+     */
+    const std::array<unsigned, 2>& get_dimensions() { return _dimensions; }
 };
 
 }  // namespace graphics
