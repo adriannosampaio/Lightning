@@ -18,6 +18,17 @@ jobs:
         auto-activate-base: true
         # Conda configuration. Comma separated list of channels to use in order of priority. See https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/ for more information.
         channels: conda-forge
+        auto-update-conda: true
+        python-version: '3.9'
+    - name: Conda info
+      shell: bash -l {0}
+      run: conda info
+    - name: Conda list
+      shell: pwsh
+      run: conda list
+    - name: Environment
+      shell: bash -l {0}
+      run: printenv | sort
     - name: Install dependencies
       run: |
         conda install conda-devenv -c conda-forge
