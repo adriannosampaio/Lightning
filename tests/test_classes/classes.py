@@ -28,3 +28,31 @@ class UnitTest(Test):
 			output = output.decode("utf-8")
 			print(f'Output:\n{output}')
 		return exit_code == 0
+
+class CaseTest(Test):
+
+	
+	def __init__(self, input_file, output_file) -> None:
+		self.executable = f'{os.getenv("LIGHTNING_BIN_DIR")}/Lightning'
+		self.input_file = input_file
+		self.output_file = output_file
+
+	def run(self):
+		output = ''
+		exit_code = 0
+		try:
+			output = sp.check_output([
+				self.executable, 
+				'-f', 
+				self.input_file,
+				'-o', 
+				self.output_file
+			])
+		except sp.CalledProcessError as e:                                                                                             
+			exit_code = e.returncode
+			output = e.output
+		
+		if output:
+			output = output.decode("utf-8")
+			print(f'Output:\n{output}')
+		return exit_code == 0

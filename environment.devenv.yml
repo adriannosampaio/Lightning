@@ -23,6 +23,8 @@ dependencies:
   - clang-format
   - ninja
   - gcc
+  - pillow
+  - numpy
   - pip:
     - pre-commit
 
@@ -31,4 +33,6 @@ environment:
   LIGHTNING_GRAPHICS: {{ root }}/graphics
   LIGHTNING_CORE: {{ root }}/core
   LIGHTNING_BUILD_DIR: {{ root }}/build
+  LIGHTNING_BIN_DIR: {{ root }}/build/install/bin
   LIGHTNING_TESTS: {{ root }}/tests
+  LD_LIBRARY_PATH: /usr/lib/:{{ conda_prefix }}/lib

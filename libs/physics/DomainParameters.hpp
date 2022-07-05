@@ -10,7 +10,7 @@ struct DomainParameters {
     Eigen::Vector3d cell_center_offset;
     int number_of_cells_in_xy_plane;
 
-    DomainParameters(const Eigen::Vector3d& dims, const Eigen::Vector3i& ncs) :
+    DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
         dimensions(dims),
         number_of_cells(ncs),
         cell_dimensions(
