@@ -1,5 +1,8 @@
 name: GitHub Pages
-on: [push, workflow_dispatch]
+on: 
+  push:
+    branch: master
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -18,22 +21,12 @@ jobs:
         with:
           doxyfile-path: docs/doxyfile
 
-      - name: GH Pages deploy
-        # You may pin to the exact commit or the version.
-        # uses: Cecilapp/GitHub-Pages-deploy@64837616f5938346d4be701112e6941195bfd54a
-        uses: Cecilapp/GitHub-Pages-deploy@3.2.1
-        with: 
-          email: adriannosampaio@gmail.com
-          # Where static files are.
-          build_dir: docs
-          # Which branch to push files.
-          branch: gh-pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         # If you're changing the branch from main, 
         # also change the `main` in `refs/heads/main` 
         # below accordingly.
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
