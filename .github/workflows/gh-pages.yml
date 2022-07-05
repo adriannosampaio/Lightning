@@ -23,6 +23,7 @@ jobs:
         # uses: Cecilapp/GitHub-Pages-deploy@64837616f5938346d4be701112e6941195bfd54a
         uses: Cecilapp/GitHub-Pages-deploy@3.2.1
         with: 
+          email: adriannosampaio@gmail.com
           # Where static files are.
           build_dir: docs
           # Which branch to push files.
