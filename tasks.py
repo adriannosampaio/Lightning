@@ -57,4 +57,11 @@ def test(c, pattern=None, verbose=False):
     print("Running tests!")
     with c.cd(f'{str(root_path)}/tests'):
         c.run(
-            f'pytest {"-s" if verbose else ""} {"-k" if pattern is not None else ""} {pattern or ""} ', pty=True)
+            ' '.join([
+                'pytest',
+                f'{"-s" if verbose else ""} {"-k" if pattern is not None else ""}',
+                f'{pattern or ""}',
+                '--basetemp=tmp'
+            ]), 
+            pty=True
+        )
