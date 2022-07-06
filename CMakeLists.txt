@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Lightning)
 
 set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # find relevant packages
@@ -26,6 +27,5 @@ target_include_directories(Lightning PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_I
 target_link_libraries(Lightning PUBLIC  ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 target_include_directories(Lightning PRIVATE libs src)
 target_link_libraries(Lightning PUBLIC Eigen3::Eigen Graphics Physics SimpleArgParser)
-
 
 install(TARGETS Lightning DESTINATION bin)

@@ -36,4 +36,3 @@ environment:
   LIGHTNING_BUILD_DIR: {{ root }}/build
   LIGHTNING_BIN_DIR: {{ root }}/build/install/bin
   LIGHTNING_TESTS: {{ root }}/tests
-  LD_LIBRARY_PATH: /usr/lib/:{{ conda_prefix }}/lib
