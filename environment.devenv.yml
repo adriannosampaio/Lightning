@@ -25,6 +25,7 @@ dependencies:
   - gcc
   - pillow
   - numpy
+  - pytest-cpp
   - pip:
     - pre-commit
 

@@ -10,7 +10,6 @@ class Test():
 
 class UnitTest(Test):
 
-	base_dir = f'{os.getenv("LIGHTNING_BUILD_DIR")}/install/unit_tests'
 	
 	def __init__(self, executable) -> None:
 		self.executable = executable
@@ -19,7 +18,7 @@ class UnitTest(Test):
 		output = ''
 		exit_code = 0
 		try:
-			output = sp.check_output([f'{UnitTest.base_dir}/{self.executable}'], shell=True)
+			output = sp.check_output([f'{self.executable}'], shell=True)
 		except sp.CalledProcessError as e:                                                                                             
 			exit_code = e.returncode
 			output = e.output

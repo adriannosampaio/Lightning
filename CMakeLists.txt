@@ -29,5 +29,3 @@ target_link_libraries(Lightning PUBLIC Eigen3::Eigen Graphics Physics SimpleArgP
 
 
 install(TARGETS Lightning DESTINATION bin)
-#install(DIRECTORY tests/ DESTINATION tests)
-install(TARGETS test_physics DESTINATION unit_tests)

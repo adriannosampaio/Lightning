@@ -32,8 +32,8 @@ inline double clamp(double value, double min_value, double max_value) {
  * @param value the electric potential value to be clamped
  * @return the clamped value
  */
-inline double clamp_potential(
-    double value) {  // cppcheck-suppress unusedFunction
+
+inline double clamp_potential(double value) {
     return clamp(value, -MAX_POTENTIAL, MAX_POTENTIAL);
 }
 
