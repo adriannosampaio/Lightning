@@ -33,4 +33,11 @@ jobs:
       run: |
         conda activate lightning
         inv build
+    - name: Test
+      shell: bash -l {0}
+      run: |
+        conda activate lightning
+        env | grep LD
+        env | grep LIGHT
+        inv test
         

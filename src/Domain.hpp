@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include <memory>
 #include <vector>
 
@@ -56,3 +57,54 @@ class Domain {
 
     ~Domain() {}
 };
+
+std::shared_ptr<Domain> setup_domain(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string data;
+    bool filled_dimensions = false;
+    Eigen::Vector3d dimensions;
+    bool filled_cells = false;
+    Eigen::Vector3i num_cells;
+    bool domain_created = false;
+    std::shared_ptr<Domain> domain = nullptr;
+    /*
+    auto params = DomainParameters(
+            Eigen::Vector3d{200, 1, 150}, Eigen::Vector3i{400, 1, 300});
+        // Create domain
+        Domain d(params);
+        // Add electric charges
+        d.add_charge(Eigen::Vector3d{10, 0, 10}, 10000);
+        d.add_charge(Eigen::Vector3d{10, 0, 100}, 10000);
+        d.add_charge(Eigen::Vector3d{150, 0, 100}, -10000);
+    */
+    while (file >> data) {
+        if (data == "DIMS") {
+            double x, y, z;
+            file >> x >> y >> z;
+            dimensions = Eigen::Vector3d{x, y, z};
+            filled_dimensions = true;
+        } else if (data == "CELLS") {
+            int x, y, z;
+            file >> x >> y >> z;
+            num_cells = Eigen::Vector3i{x, y, z};
+            filled_cells = true;
+        } else if (data == "CHARGE") {
+            if (!domain_created)
+                throw std::runtime_error(
+                    "Attempting to add charge to incomplete domain. "
+                    "Please make sure the input file initializes both "
+                    "the Domain's dimensions and number of cells before "
+                    "adding a new charge");
+            double x, y, z, q;
+            file >> x >> y >> z >> q;
+            domain->add_charge(Eigen::Vector3d{x, y, z}, q);
+        }
+
+        if (filled_dimensions && filled_cells && !domain_created) {
+            domain = std::make_shared<Domain>(
+                DomainParameters(dimensions, num_cells));
+            domain_created = true;
+        }
+    }
+    return domain;
+}

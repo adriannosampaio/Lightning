@@ -45,8 +45,23 @@ def clean(c):
         c.run(f"rm -rf build/*")
 
 @task
-def test(c, k=None, verbose=True):
+def test(c, pattern=None, verbose=False):
+    ''' Run all tests in the suite. It also allows for custom
+        test selection and verbosity configuration
+
+        @param pattern Specify a name pattern for the tests 
+            to be executed
+
+        @param verbose set pytest maximum verbosity value 
+    '''
     print("Running tests!")
     with c.cd(f'{str(root_path)}/tests'):
-        test_defs = f'-k {k}' if k else ''
-        c.run(f'pytest -s tests.py {test_defs}', pty=True)
+        c.run(
+            ' '.join([
+                'pytest',
+                f'{"-s" if verbose else ""} {"-k" if pattern is not None else ""}',
+                f'{pattern or ""}',
+                '--basetemp=tmp'
+            ]), 
+            pty=True
+        )

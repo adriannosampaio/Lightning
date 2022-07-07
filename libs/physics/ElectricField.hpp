@@ -10,10 +10,10 @@ namespace physics {
 class ElectricField {
    private:
     std::vector<double> _electric_potential_cells;
-    const DomainParameters& _parameters;
+    const DomainParameters _parameters;
 
    public:
-    explicit ElectricField(const DomainParameters& parameters) :
+    explicit ElectricField(DomainParameters parameters) :
         _parameters(parameters),
         _electric_potential_cells(
             std::vector<double>(parameters.number_of_cells.prod())) {}

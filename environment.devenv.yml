@@ -23,6 +23,9 @@ dependencies:
   - clang-format
   - ninja
   - gcc
+  - pillow
+  - numpy
+  - pytest-cpp
   - pip:
     - pre-commit
 
@@ -31,4 +34,5 @@ environment:
   LIGHTNING_GRAPHICS: {{ root }}/graphics
   LIGHTNING_CORE: {{ root }}/core
   LIGHTNING_BUILD_DIR: {{ root }}/build
+  LIGHTNING_BIN_DIR: {{ root }}/build/install/bin
   LIGHTNING_TESTS: {{ root }}/tests
