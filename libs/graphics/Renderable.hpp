@@ -7,14 +7,17 @@
 #include <memory>
 #include <vector>
 
+#include "Colors.hpp"
+
 namespace graphics {
 
 class Renderable {
    protected:
     int _lifetime;
+    color_t _color;
 
    public:
-    Renderable(int lifetime);
+    Renderable(int lifetime, const color_t& color);
     ~Renderable();
     void reduce_lifetime();
     virtual void render(SDL_Renderer* renderer) const = 0;
@@ -29,6 +32,7 @@ class Line : public Renderable {
     Line(
         const std::array<int, 2>& point_0,
         const std::array<int, 2>& point_1,
+        const color_t& color = WHITE,
         unsigned lifetime = 0);
     ~Line();
     void render(SDL_Renderer* renderer) const override;
@@ -44,7 +48,10 @@ class Pixel : public Renderable {
     std::array<int, 2> _position;
 
    public:
-    explicit Pixel(const std::array<int, 2>& position, unsigned lifetime = 0);
+    explicit Pixel(
+        const std::array<int, 2>& position,
+        const color_t& color = WHITE,
+        unsigned lifetime = -1);
     ~Pixel();
     void render(SDL_Renderer* renderer) const override;
 };
@@ -94,7 +101,7 @@ class Field : public Renderable {
         double max_value = 255,
         double min_value = 0,
         int lifetime = -1) :
-        Renderable(lifetime),
+        Renderable(lifetime, WHITE),
         _dimensions(dimensions),
         _data(data),
         _max_value(max_value),

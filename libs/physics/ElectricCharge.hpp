@@ -1,7 +1,7 @@
 #pragma once
 #include <Eigen/Dense>
 
-#include "PhysicsUtils.hpp"
+#include "Utils.hpp"
 namespace physics {
 
 struct ElectricCharge {

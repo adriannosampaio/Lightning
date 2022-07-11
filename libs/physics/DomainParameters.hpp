@@ -44,4 +44,11 @@ struct DomainParameters {
             static_cast<int>(std::floor(coords[1] / cell_dimensions[1])),
             static_cast<int>(std::floor(coords[2] / cell_dimensions[2]))};
     }
+
+    inline bool is_inside(const Eigen::Vector3d& coords) const {
+        bool x = coords[0] > 0.0 && coords[0] < dimensions[0];
+        bool y = coords[1] > 0.0 && coords[1] < dimensions[1];
+        bool z = coords[2] > 0.0 && coords[2] < dimensions[2];
+        return x && y && z;
+    }
 };

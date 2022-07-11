@@ -9,8 +9,9 @@
 #include "Domain.hpp"
 #include "Lightning.hpp"
 #include "PathPoint.hpp"
+#include "graphics/Colors.hpp"
 #include "graphics/Graphics.hpp"
-#include "physics/PhysicsUtils.hpp"
+#include "physics/Utils.hpp"
 
 int main(int argc, char** argv) {
     graphics::initialize();
@@ -24,18 +25,6 @@ int main(int argc, char** argv) {
         std::shared_ptr<graphics::Renderer> renderer =
             std::make_shared<graphics::Renderer>();
 
-        // Set domain parameters
-        // auto params = DomainParameters(
-        //    Eigen::Vector3d{200, 1, 150}, Eigen::Vector3i{400, 1, 300});
-        //// Create domain
-        // Domain d(params);
-        //// Add electric charges
-        // d.add_charge(Eigen::Vector3d{10, 0, 10}, 10000);
-        // d.add_charge(Eigen::Vector3d{10, 0, 100}, 10000);
-        // d.add_charge(Eigen::Vector3d{150, 0, 100}, -10000);
-        //// Generate the electric potential field
-        // d.generate_field();
-
         auto domain = setup_domain(parser.getArgument<std::string>("-f"));
         domain->generate_field();
 
@@ -48,6 +37,20 @@ int main(int argc, char** argv) {
             grid_dimensions, field_data, physics::MAX_POTENTIAL, 0, -1);
         // Add the field graphics object to the renderer
         renderer->add_renderable(f);
+
+        for (int i = 0; i < 100; i++) {
+            auto color = graphics::WHITE;
+            auto coords = physics::generate_random_point_in_sphere(100);
+            std::array<int, 2> position = {
+                static_cast<int>(coords[0]) + 200,
+                static_cast<int>(coords[2]) + 150};
+
+            auto p = std::make_shared<graphics::Pixel>(position, color);
+            renderer->add_renderable(p);
+        }
+
+        auto l = domain->generate_path();
+        for (auto line : l->get_lines()) renderer->add_renderable(line);
         // Generate an image
         renderer->generate_image(
             parser.getArgument<std::string>("-o"), 400, 300);
