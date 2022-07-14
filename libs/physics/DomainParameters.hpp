@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include <Utils.hpp>
 #include <memory>
 #include <vector>
 
@@ -8,6 +9,7 @@ struct DomainParameters {
     Eigen::Vector3i number_of_cells;
     Eigen::Vector3d cell_dimensions;
     Eigen::Vector3d cell_center_offset;
+    double max_cell_dimension;
     int number_of_cells_in_xy_plane;
 
     DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
@@ -17,6 +19,7 @@ struct DomainParameters {
             {dimensions[0] / number_of_cells[0],
              dimensions[1] / number_of_cells[1],
              dimensions[2] / number_of_cells[2]}),
+        max_cell_dimension(cell_dimensions.maxCoeff()),
         cell_center_offset(cell_dimensions / 2) {
         number_of_cells_in_xy_plane = number_of_cells[0] * number_of_cells[1];
     }
@@ -43,6 +46,14 @@ struct DomainParameters {
             static_cast<int>(std::floor(coords[0] / cell_dimensions[0])),
             static_cast<int>(std::floor(coords[1] / cell_dimensions[1])),
             static_cast<int>(std::floor(coords[2] / cell_dimensions[2]))};
+    }
+
+    inline Eigen::Vector3d clamp_coordinates_to_boundary(
+        const Eigen::Vector3d& coords) const {
+        return {
+            physics::clamp(coords[0], 0.0, dimensions[0]),
+            physics::clamp(coords[1], 0.0, dimensions[1]),
+            physics::clamp(coords[2], 0.0, dimensions[2])};
     }
 
     inline bool is_inside(const Eigen::Vector3d& coords) const {

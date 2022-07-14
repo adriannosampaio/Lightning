@@ -17,7 +17,7 @@ class PathPoint {
      *
      */
     std::vector<std::shared_ptr<PathPoint>> _children;
-
+    double _field;
     Eigen::Vector3d _position;
 
    public:
@@ -26,6 +26,8 @@ class PathPoint {
     explicit PathPoint(const Eigen::Vector3d& vec);
     void add_child(std::shared_ptr<PathPoint> path_point);
     const Eigen::Vector3d& get_position() { return _position; }
+    // const Eigen::Vector3d& get_field() { return _field; }
+    // void set_field(double field) { _field = field; }
     std::shared_ptr<PathPoint> get_child(unsigned idx) {
         return _children[idx];
     }

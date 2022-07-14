@@ -42,18 +42,19 @@ int main(int argc, char** argv) {
             auto color = graphics::WHITE;
             auto coords = physics::generate_random_point_in_sphere(100);
             std::array<int, 2> position = {
-                static_cast<int>(coords[0]) + 200,
-                static_cast<int>(coords[2]) + 150};
+                static_cast<int>(coords[0]) + 600,
+                static_cast<int>(coords[2]) + 400};
 
             auto p = std::make_shared<graphics::Pixel>(position, color);
             renderer->add_renderable(p);
         }
 
         auto l = domain->generate_path();
-        for (auto line : l->get_lines()) renderer->add_renderable(line);
+        for (auto line : l->get_lines(domain->get_parameters()))
+            renderer->add_renderable(line);
         // Generate an image
         renderer->generate_image(
-            parser.getArgument<std::string>("-o"), 400, 300);
+            parser.getArgument<std::string>("-o"), 800, 600);
 
         std::map<std::string, int> m;
         m["test"] = 1;
