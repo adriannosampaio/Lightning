@@ -3,7 +3,10 @@
 #include <SDL_image.h>
 #include <SDL_timer.h>
 
+<<<<<<< Updated upstream
+=======
 #include <string>
+>>>>>>> Stashed changes
 #include <array>
 #include <memory>
 #include <utility>

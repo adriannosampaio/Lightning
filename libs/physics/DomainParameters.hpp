@@ -36,6 +36,7 @@ struct DomainParameters {
     }
 
     inline int coords_to_cell_index(const Eigen::Vector3d& coords) const {
+
         auto cell_coords = this->coords_to_cell(coords);
         return cell_coords[2] * number_of_cells[0] * number_of_cells[1] +
                cell_coords[1] * number_of_cells[0] + cell_coords[0];

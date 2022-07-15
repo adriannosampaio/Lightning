@@ -2,8 +2,8 @@
 name: lightning
 
 channels:
-  - conda-forge
   - defaults
+  - conda-forge
 dependencies:
   - doxygen
   - eigen
@@ -13,7 +13,6 @@ dependencies:
   - python=3.9.7
   - sdl2=2.0.18
   - sdl2_image=2.0.5
-  - gcc  # [linux]
   - pip
   - invoke
   - catch2
@@ -22,7 +21,7 @@ dependencies:
   - pytest-regressions
   - clang-format
   - ninja
-  - gcc
+  - gcc # [linux]
   - pillow
   - numpy
   - pytest-cpp

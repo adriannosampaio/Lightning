@@ -44,7 +44,9 @@ class Domain {
     std::vector<double> get_field() { return _field->get_field_data(); }
 
     std::shared_ptr<Lightning> generate_path() {
-        int M = 60, N = 5, R = 15;
+        int M = 60, N = 10;
+        
+        double R = 20, segment_length = 10*_parameters.max_cell_dimension;
 
         auto middle_point_it = std::stable_partition(
             _charges.begin(),
@@ -90,18 +92,17 @@ class Domain {
             // Generate random points
             std::vector<std::shared_ptr<PathPoint>> candidates;
             candidates.reserve(M);
-            for (int point_idx = 0; point_idx < M; point_idx++) {
+            auto points =
+                physics::generate_fibonacci_sphere(leader_position, 30, M);
+            for (auto& point : points) {
                 auto color = graphics::WHITE;
-                Eigen::Vector3d coords =
-                    leader_position + physics::generate_random_point_in_sphere(
-                                          4 * _parameters.max_cell_dimension);
-                if (!_parameters.is_inside(coords)) {
-                    coords = _parameters.clamp_coordinates_to_boundary(coords);
+                if (!_parameters.is_inside(point)) {
+                    point = _parameters.clamp_coordinates_to_boundary(point);
                 }
-                if (_field->get_potential(coords) < leader_potential) {
-                    continue;
-                }
-                candidates.push_back(std::make_shared<PathPoint>(coords));
+                //if (_field->get_potential(point) < leader_potential) {
+                //    continue;
+                //}
+                candidates.push_back(std::make_shared<PathPoint>(point));
                 std::push_heap(
                     candidates.begin(), candidates.end(), heap_function);
             }

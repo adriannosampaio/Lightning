@@ -46,6 +46,16 @@ int main(int argc, char** argv) {
                 static_cast<int>(coords[2]) + 400};
 
             auto p = std::make_shared<graphics::Pixel>(position, color);
+            //renderer->add_renderable(p);
+        }
+
+        Eigen::Vector3d center{600, 1, 400};
+        for(auto& point : physics::generate_fibonacci_sphere(center, 100, 1000)){
+            std::array<int, 2> position = {
+                static_cast<int>(point[0]),
+                static_cast<int>(point[2])};
+
+            auto p = std::make_shared<graphics::Pixel>(position, graphics::WHITE);
             renderer->add_renderable(p);
         }
 
@@ -53,7 +63,7 @@ int main(int argc, char** argv) {
         for (auto line : l->get_lines(domain->get_parameters()))
             renderer->add_renderable(line);
         // Generate an image
-        renderer->generate_image(
+        renderer->run(
             parser.getArgument<std::string>("-o"), 800, 600);
 
         std::map<std::string, int> m;

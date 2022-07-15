@@ -36,6 +36,7 @@ class ElectricField {
     std::vector<double> get_field_data() { return _electric_potential_cells; }
     double get_potential(const Eigen::Vector3d& position) {
         auto cell_idx = _parameters.coords_to_cell_index(position);
+        auto cell_idx = _parameters.coords_to_cell_index(position);
         return _electric_potential_cells[cell_idx];
     }
 
