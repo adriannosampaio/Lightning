@@ -18,20 +18,51 @@ int main(int argc, char** argv) {
 
     parser::ArgumentParser parser(argc, argv);
     parser.addArgument("-f", true, true, "input light file");
-    parser.addArgument("-o", true, true, "Output png file");
+    parser.addArgument("-o", true, false, "Output png file");
+
+    parser.addArgument(
+        "-S", true, false, "Size of each lightning segment in number of ");
+    parser.addArgument(
+        "-M",
+        true,
+        false,
+        "Number of preliminary candidates generated per point");
+    parser.addArgument(
+        "-N", true, false, "Max number of true candidates accepted per point");
+    parser.addArgument(
+        "-R", true, false, "Minimum distance between true candidate points");
+    parser.addArgument(
+        "-D",
+        true,
+        false,
+        "Minimum accepted distance between a step leader and the end point");
+
     try {
         parser.parse();
 
         std::shared_ptr<graphics::Renderer> renderer =
             std::make_shared<graphics::Renderer>();
-
         auto domain = setup_domain(parser.getArgument<std::string>("-f"));
+        auto params = domain->get_parameters();
+        if (parser.isDefined("-S"))
+            params->lightning_segment_size = parser.getArgument<double>("-S");
+        if (parser.isDefined("-M"))
+            params->new_points_per_leader = parser.getArgument<unsigned>("-M");
+        if (parser.isDefined("-N"))
+            params->maximum_accepted_candidates =
+                parser.getArgument<unsigned>("-N");
+        if (parser.isDefined("-R"))
+            params->minimum_candidate_distance =
+                parser.getArgument<double>("-R");
+        if (parser.isDefined("-D"))
+            params->accepted_distance_to_end_point =
+                parser.getArgument<double>("-D");
+
         domain->generate_field();
 
         // Convert Electric field into a Field graphics object
         std::array<int, 2> grid_dimensions = {
-            domain->get_parameters().number_of_cells[0],
-            domain->get_parameters().number_of_cells[2]};
+            params->number_of_cells[0], params->number_of_cells[2]};
         auto field_data = domain->get_field();
         auto f = std::make_shared<graphics::Field>(
             grid_dimensions, field_data, physics::MAX_POTENTIAL, 0, -1);
@@ -46,25 +77,28 @@ int main(int argc, char** argv) {
                 static_cast<int>(coords[2]) + 400};
 
             auto p = std::make_shared<graphics::Pixel>(position, color);
-            //renderer->add_renderable(p);
+            // renderer->add_renderable(p);
         }
 
         Eigen::Vector3d center{600, 1, 400};
-        for(auto& point : physics::generate_fibonacci_sphere(center, 100, 1000)){
+        for (auto& point :
+             physics::generate_fibonacci_sphere(center, 100, 1000)) {
             std::array<int, 2> position = {
-                static_cast<int>(point[0]),
-                static_cast<int>(point[2])};
+                static_cast<int>(point[0]), static_cast<int>(point[2])};
 
-            auto p = std::make_shared<graphics::Pixel>(position, graphics::WHITE);
+            auto p =
+                std::make_shared<graphics::Pixel>(position, graphics::WHITE);
             renderer->add_renderable(p);
         }
 
         auto l = domain->generate_path();
-        for (auto line : l->get_lines(domain->get_parameters()))
-            renderer->add_renderable(line);
+        for (auto line : l->get_lines(params)) renderer->add_renderable(line);
         // Generate an image
-        renderer->run(
-            parser.getArgument<std::string>("-o"), 800, 600);
+        if (parser.isDefined("-o"))
+            renderer->generate_image(
+                parser.getArgument<std::string>("-o"), 800, 600);
+        else
+            renderer->run("Window", 800, 600);
 
         std::map<std::string, int> m;
         m["test"] = 1;

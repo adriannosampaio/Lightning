@@ -1,6 +1,6 @@
 
 file(GLOB SOURCES *.hpp)
-add_library (Physics INTERFACE ${SOURCES})
+add_library (Physics INTERFACE)
 
 
 #target_include_directories(Graphics PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})

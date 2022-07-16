@@ -26,7 +26,7 @@ def doxygen(c):
 
 
 @task
-def configure(c, mode="Debug", install_dir=''):
+def configure(c, mode="Debug", install_dir='install'):
     print(str(f'"{build_path}"'))
     os.makedirs(build_path, exist_ok=True)
     with c.cd(str(build_path)):

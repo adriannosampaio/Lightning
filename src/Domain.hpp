@@ -16,7 +16,7 @@
 
 class Domain {
    private:
-    DomainParameters _parameters;
+    std::shared_ptr<DomainParameters> _parameters;
 
     std::shared_ptr<physics::ElectricField> _field;
     std::vector<std::shared_ptr<Lightning>> _lightning_paths;
@@ -24,16 +24,18 @@ class Domain {
     std::vector<double> _electric_potential_cells;
 
    public:
-    explicit Domain(DomainParameters parameters) :
+    explicit Domain(std::shared_ptr<DomainParameters> parameters) :
         _parameters(parameters),
         _field(std::make_shared<physics::ElectricField>(parameters)) {}
 
-    void set_parameters(DomainParameters parameters) {
+    void set_parameters(std::shared_ptr<DomainParameters> parameters) {
         _parameters = parameters;
         _field = std::make_shared<physics::ElectricField>(parameters);
     }
 
-    const DomainParameters& get_parameters() const { return _parameters; }
+    std::shared_ptr<DomainParameters> get_parameters() const {
+        return _parameters;
+    }
 
     void add_charge(const Eigen::Vector3d& position, double charge) {
         _charges.emplace_back(position, charge);
@@ -44,9 +46,12 @@ class Domain {
     std::vector<double> get_field() { return _field->get_field_data(); }
 
     std::shared_ptr<Lightning> generate_path() {
-        int M = 60, N = 10;
-        
-        double R = 20, segment_length = 10*_parameters.max_cell_dimension;
+        int M = _parameters->new_points_per_leader,
+            N = _parameters->maximum_accepted_candidates;
+
+        double R = _parameters->minimum_candidate_distance,
+               segment_length = _parameters->lightning_segment_size,
+               distance_to_end = _parameters->accepted_distance_to_end_point;
 
         auto middle_point_it = std::stable_partition(
             _charges.begin(),
@@ -92,16 +97,16 @@ class Domain {
             // Generate random points
             std::vector<std::shared_ptr<PathPoint>> candidates;
             candidates.reserve(M);
-            auto points =
-                physics::generate_fibonacci_sphere(leader_position, 30, M);
+            auto points = physics::generate_fibonacci_sphere(
+                leader_position, segment_length, M);
             for (auto& point : points) {
                 auto color = graphics::WHITE;
-                if (!_parameters.is_inside(point)) {
-                    point = _parameters.clamp_coordinates_to_boundary(point);
+                if (!_parameters->is_inside(point)) {
+                    point = _parameters->clamp_coordinates_to_boundary(point);
                 }
-                //if (_field->get_potential(point) < leader_potential) {
-                //    continue;
-                //}
+                if (_field->get_potential(point) < leader_potential) {
+                    continue;
+                }
                 candidates.push_back(std::make_shared<PathPoint>(point));
                 std::push_heap(
                     candidates.begin(), candidates.end(), heap_function);
@@ -145,7 +150,7 @@ class Domain {
                     if (dist_to_end < min_distance_to_end)
                         min_distance_to_end = dist_to_end;
                 }
-                if (min_distance_to_end < 20 * _parameters.max_cell_dimension) {
+                if (min_distance_to_end < distance_to_end) {
                     reached_destination = true;
                 }
                 step_leaders_to_explore.push(selected_candidate);
@@ -203,10 +208,9 @@ std::shared_ptr<Domain> setup_domain(const std::string& filename) {
             file >> x >> y >> z >> q;
             domain->add_charge(Eigen::Vector3d{x, y, z}, q);
         }
-
         if (filled_dimensions && filled_cells && !domain_created) {
             domain = std::make_shared<Domain>(
-                DomainParameters(dimensions, num_cells));
+                std::make_shared<DomainParameters>(dimensions, num_cells));
             domain_created = true;
         }
     }

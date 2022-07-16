@@ -11,6 +11,11 @@ struct DomainParameters {
     Eigen::Vector3d cell_center_offset;
     double max_cell_dimension;
     int number_of_cells_in_xy_plane;
+    int new_points_per_leader = 30;
+    int maximum_accepted_candidates = 3;
+    double minimum_candidate_distance;
+    double lightning_segment_size;
+    double accepted_distance_to_end_point;
 
     DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
         dimensions(dims),
@@ -20,7 +25,12 @@ struct DomainParameters {
              dimensions[1] / number_of_cells[1],
              dimensions[2] / number_of_cells[2]}),
         max_cell_dimension(cell_dimensions.maxCoeff()),
-        cell_center_offset(cell_dimensions / 2) {
+        cell_center_offset(cell_dimensions / 2),
+        minimum_candidate_distance(max_cell_dimension * 2),
+        lightning_segment_size(max_cell_dimension * 2),
+        accepted_distance_to_end_point(2 * lightning_segment_size)
+
+    {
         number_of_cells_in_xy_plane = number_of_cells[0] * number_of_cells[1];
     }
 
@@ -36,7 +46,6 @@ struct DomainParameters {
     }
 
     inline int coords_to_cell_index(const Eigen::Vector3d& coords) const {
-
         auto cell_coords = this->coords_to_cell(coords);
         return cell_coords[2] * number_of_cells[0] * number_of_cells[1] +
                cell_coords[1] * number_of_cells[0] + cell_coords[0];
