@@ -21,6 +21,8 @@ class Domain {
     std::shared_ptr<physics::ElectricField> _field;
     std::vector<std::shared_ptr<Lightning>> _lightning_paths;
     std::vector<physics::ElectricCharge> _charges;
+    std::vector<physics::ElectricCharge>::iterator _positive_charges_start;
+
     std::vector<double> _electric_potential_cells;
 
    public:
@@ -41,9 +43,23 @@ class Domain {
         _charges.emplace_back(position, charge);
     }
 
-    void generate_field() { _field->generate_field(_charges); }
+    void generate_field(double noise) { _field->generate_field(_charges, noise); }
 
     std::vector<double> get_field() { return _field->get_field_data(); }
+
+    double get_smallest_distance_to_end_point(const Eigen::Vector3d& position) const
+    {
+        double min_distance_to_end = HUGE_VAL;
+        for (auto charge_it = _positive_charges_start;
+                charge_it != _charges.end();
+                charge_it++) {
+            double dist_to_end = physics::get_euclidean_distance(
+                position, charge_it->get_position());
+            if (dist_to_end < min_distance_to_end)
+                min_distance_to_end = dist_to_end;
+        }
+        return min_distance_to_end;
+    }
 
     std::shared_ptr<Lightning> generate_path() {
         int M = _parameters->new_points_per_leader,
@@ -69,7 +85,8 @@ class Domain {
         bool reached_destination = false;
         std::queue<std::shared_ptr<PathPoint>> step_leaders_to_explore;
         step_leaders_to_explore.push(root);
-        while (!step_leaders_to_explore.empty() && !reached_destination) {
+        unsigned iter = 0;
+        while (!step_leaders_to_explore.empty() && !reached_destination && iter++ < _parameters->max_iterations) {
             auto current_leader = step_leaders_to_explore.front();
             step_leaders_to_explore.pop();
 
@@ -77,21 +94,26 @@ class Domain {
             double leader_potential = _field->get_potential(leader_position);
             auto heap_function = [&](std::shared_ptr<PathPoint> ptr0,
                                      std::shared_ptr<PathPoint> ptr1) {
+
+                //auto candidate_potential_0 =
+                //    _field->get_potential(candidate_position_0);
+                //double field_value_0 =
+                //    (candidate_potential_0 - leader_potential) /
+                //    physics::get_euclidean_distance(
+                //        candidate_position_0, leader_position);
+                //auto candidate_potential_1 =
+                //    _field->get_potential(candidate_position_1);
+                //double field_value_1 =
+                //    (candidate_potential_1 - leader_potential) /
+                //    physics::get_euclidean_distance(
+                //        candidate_position_1, leader_position);
+                //return field_value_0 < field_value_1;
+
                 auto candidate_position_0 = ptr0->get_position();
-                auto candidate_potential_0 =
-                    _field->get_potential(candidate_position_0);
-                double field_value_0 =
-                    (candidate_potential_0 - leader_potential) /
-                    physics::get_euclidean_distance(
-                        candidate_position_0, leader_position);
                 auto candidate_position_1 = ptr1->get_position();
-                auto candidate_potential_1 =
-                    _field->get_potential(candidate_position_1);
-                double field_value_1 =
-                    (candidate_potential_1 - leader_potential) /
-                    physics::get_euclidean_distance(
-                        candidate_position_1, leader_position);
-                return field_value_0 < field_value_1;
+                double distance_0 = this->get_smallest_distance_to_end_point(candidate_position_0);
+                double distance_1 = this->get_smallest_distance_to_end_point(candidate_position_1);
+                return distance_0 < distance_1;
             };
 
             // Generate random points
@@ -140,16 +162,9 @@ class Domain {
 
             for (auto selected_candidate : step_leaders) {
                 current_leader->add_child(selected_candidate);
-                double min_distance_to_end = HUGE_VAL;
-                for (auto charge_it = middle_point_it;
-                     charge_it != _charges.end();
-                     charge_it++) {
-                    double dist_to_end = physics::get_euclidean_distance(
-                        selected_candidate->get_position(),
-                        charge_it->get_position());
-                    if (dist_to_end < min_distance_to_end)
-                        min_distance_to_end = dist_to_end;
-                }
+                double min_distance_to_end = this->get_smallest_distance_to_end_point(
+                    selected_candidate->get_position()
+                );
                 if (min_distance_to_end < distance_to_end) {
                     reached_destination = true;
                 }

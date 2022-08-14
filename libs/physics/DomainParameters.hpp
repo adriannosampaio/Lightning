@@ -13,9 +13,10 @@ struct DomainParameters {
     int number_of_cells_in_xy_plane;
     int new_points_per_leader = 30;
     int maximum_accepted_candidates = 3;
-    double minimum_candidate_distance;
+    double minimum_candidate_distance = 10;
     double lightning_segment_size;
     double accepted_distance_to_end_point;
+    unsigned max_iterations = 5000;
 
     DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
         dimensions(dims),
@@ -27,7 +28,7 @@ struct DomainParameters {
         max_cell_dimension(cell_dimensions.maxCoeff()),
         cell_center_offset(cell_dimensions / 2),
         minimum_candidate_distance(max_cell_dimension * 2),
-        lightning_segment_size(max_cell_dimension * 2),
+        lightning_segment_size(max_cell_dimension),
         accepted_distance_to_end_point(2 * lightning_segment_size)
 
     {

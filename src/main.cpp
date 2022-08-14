@@ -30,9 +30,16 @@ int main(int argc, char** argv) {
     parser.addArgument(
         "-N", true, false, "Max number of true candidates accepted per point");
     parser.addArgument(
+        "-I", true, false, "Max number of iterations");
+    parser.addArgument(
         "-R", true, false, "Minimum distance between true candidate points");
     parser.addArgument(
         "-D",
+        true,
+        false,
+        "Minimum accepted distance between a step leader and the end point");
+    parser.addArgument(
+        "--noise",
         true,
         false,
         "Minimum accepted distance between a step leader and the end point");
@@ -54,11 +61,19 @@ int main(int argc, char** argv) {
         if (parser.isDefined("-R"))
             params->minimum_candidate_distance =
                 parser.getArgument<double>("-R");
+        if (parser.isDefined("-I"))
+            params->max_iterations =
+                parser.getArgument<double>("-I");
         if (parser.isDefined("-D"))
             params->accepted_distance_to_end_point =
                 parser.getArgument<double>("-D");
+        
+        double noise = 0.2;
+        if (parser.isDefined("--noise"))
+            noise =
+                parser.getArgument<double>("--noise");
 
-        domain->generate_field();
+        domain->generate_field(noise);
 
         // Convert Electric field into a Field graphics object
         std::array<int, 2> grid_dimensions = {
@@ -69,16 +84,15 @@ int main(int argc, char** argv) {
         // Add the field graphics object to the renderer
         renderer->add_renderable(f);
 
-        for (int i = 0; i < 100; i++) {
-            auto color = graphics::WHITE;
-            auto coords = physics::generate_random_point_in_sphere(100);
-            std::array<int, 2> position = {
-                static_cast<int>(coords[0]) + 600,
-                static_cast<int>(coords[2]) + 400};
-
-            auto p = std::make_shared<graphics::Pixel>(position, color);
-            // renderer->add_renderable(p);
-        }
+        //for (int i = 0; i < 100; i++) {
+        //      auto color = graphics::WHITE;
+        //      auto coords = physics::generate_random_point_in_sphere(100);
+        //      std::array<int, 2> position = {
+        //          static_cast<int>(coords[0]) + 600,
+        //          static_cast<int>(coords[2]) + 400};
+        //      auto p = std::make_shared<graphics::Pixel>(position, color);
+        //      // renderer->add_renderable(p);
+        //}
 
         Eigen::Vector3d center{600, 1, 400};
         for (auto& point :
