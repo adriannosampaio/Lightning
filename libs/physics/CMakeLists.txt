@@ -1,5 +1,5 @@
 
-file(GLOB SOURCES *.cpp)
+file(GLOB SOURCES *.hpp)
 add_library (Physics INTERFACE ${SOURCES})
 
 

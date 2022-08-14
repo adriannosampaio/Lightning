@@ -7,36 +7,29 @@
 #include "PathPoint.hpp"
 #include "physics/DomainParameters.hpp"
 #include "physics/ElectricCharge.hpp"
-#include "physics/ElectricField.hpp"
 
 class Domain {
    private:
-    DomainParameters _parameters;
+    std::shared_ptr<DomainParameters> _parameters;
 
-    std::shared_ptr<physics::ElectricField> _field;
     std::vector<std::shared_ptr<Lightning>> _lightning_paths;
     std::vector<physics::ElectricCharge> _charges;
     std::vector<double> _electric_potential_cells;
 
    public:
-    explicit Domain(DomainParameters parameters) :
-        _parameters(parameters),
-        _field(std::make_shared<physics::ElectricField>(parameters)) {}
+    explicit Domain(std::shared_ptr<DomainParameters> parameters) :
+        _parameters(parameters) {}
 
-    void set_parameters(DomainParameters parameters) {
+    void set_parameters(std::shared_ptr<DomainParameters> parameters) {
         _parameters = parameters;
-        _field = std::make_shared<physics::ElectricField>(parameters);
     }
 
-    const DomainParameters& get_parameters() const { return _parameters; }
-
+    std::shared_ptr<DomainParameters> get_parameters() const {
+        return _parameters;
+    }
     void add_charge(const Eigen::Vector3d& position, double charge) {
         _charges.emplace_back(position, charge);
     }
-
-    void generate_field() { _field->generate_field(_charges); }
-
-    std::vector<double> get_field() { return _field->get_field_data(); }
 
     std::shared_ptr<Lightning> generate_path(int seed = 0) {
         auto root = std::make_shared<PathPoint>(100, 0, 100);
@@ -102,7 +95,7 @@ std::shared_ptr<Domain> setup_domain(const std::string& filename) {
 
         if (filled_dimensions && filled_cells && !domain_created) {
             domain = std::make_shared<Domain>(
-                DomainParameters(dimensions, num_cells));
+                std::make_shared<DomainParameters>(dimensions, num_cells));
             domain_created = true;
         }
     }

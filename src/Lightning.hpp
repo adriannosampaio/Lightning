@@ -6,6 +6,8 @@
 
 #include "PathPoint.hpp"
 #include "graphics/Renderable.hpp"
+#include "physics/DomainParameters.hpp"
+
 class Lightning {
    private:
     std::shared_ptr<PathPoint> _root;
@@ -13,17 +15,18 @@ class Lightning {
    public:
     explicit Lightning(std::shared_ptr<PathPoint> root) : _root(root) {}
     std::shared_ptr<PathPoint> get_root() { return _root; }
-    std::vector<std::shared_ptr<graphics::Line>> get_lines() {
+    std::vector<std::shared_ptr<graphics::Line>> get_lines(
+        const std::shared_ptr<DomainParameters> params) {
         std::vector<std::shared_ptr<graphics::Line>> result;
         std::queue<std::shared_ptr<PathPoint>> queue;
         queue.push(_root);
         while (!queue.empty()) {
             auto current = queue.front();
-            auto& current_pos = current->get_position();
+            auto current_pos = params->coords_to_cell(current->get_position());
             queue.pop();
             for (auto child : current->get_children()) {
                 queue.push(child);
-                auto& child_pos = child->get_position();
+                auto child_pos = params->coords_to_cell(child->get_position());
                 result.push_back(std::make_shared<graphics::Line>(
                     std::array<int, 2>{
                         static_cast<int>(current_pos[0]),
