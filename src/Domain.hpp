@@ -33,12 +33,12 @@ class Domain {
         _charges.emplace_back(position, charge);
     }
 
-    double get_smallest_distance_to_end_point(const Eigen::Vector3d& position) const
-    {
+    double get_smallest_distance_to_end_point(
+        const Eigen::Vector3d& position) const {
         double min_distance_to_end = HUGE_VAL;
         for (auto charge_it = _positive_charges_start;
-                charge_it != _charges.end();
-                charge_it++) {
+             charge_it != _charges.end();
+             charge_it++) {
             double dist_to_end = physics::get_euclidean_distance(
                 position, charge_it->get_position());
             if (dist_to_end < min_distance_to_end)
@@ -48,7 +48,7 @@ class Domain {
     }
 
     std::shared_ptr<Lightning> generate_path(int seed = 0) {
-         int M = _parameters->new_points_per_leader,
+        int M = _parameters->new_points_per_leader,
             N = _parameters->maximum_accepted_candidates;
 
         double R = _parameters->minimum_candidate_distance,
@@ -73,12 +73,13 @@ class Domain {
         std::queue<std::shared_ptr<PathPoint>> step_leaders_to_explore;
         step_leaders_to_explore.push(root);
         unsigned iter = 0;
-        while (!step_leaders_to_explore.empty() && !reached_destination && iter++ < _parameters->max_iterations) {
+        while (!step_leaders_to_explore.empty() && !reached_destination &&
+               iter++ < _parameters->max_iterations) {
             auto current_leader = step_leaders_to_explore.front();
             step_leaders_to_explore.pop();
 
             auto leader_position = current_leader->get_position();
-            //double leader_potential = _field->get_potential(leader_position);
+            // double leader_potential = _field->get_potential(leader_position);
             auto heap_function = [&](std::shared_ptr<PathPoint> ptr0,
                                      std::shared_ptr<PathPoint> ptr1) {
                 double weight_0 = ptr0->get_weight();
@@ -97,16 +98,21 @@ class Domain {
                     point = _parameters->clamp_coordinates_to_boundary(point);
                 }
                 double rand_float = static_cast<double>(rand()) / RAND_MAX;
-                double noise_variance = _parameters->noise ? 1 + fmod(rand_float, _parameters->noise) : 1;
+                double noise_variance =
+                    _parameters->noise ?
+                        1 + fmod(rand_float, _parameters->noise) :
+                        1;
                 candidates.push_back(std::make_shared<PathPoint>(point));
-                double min_dist = this->get_smallest_distance_to_end_point(point);
-                double weight = 1000 / min_dist  * noise_variance;
+                double min_dist =
+                    this->get_smallest_distance_to_end_point(point);
+                double weight = 1000 / min_dist * noise_variance;
                 candidates.back()->set_weight(weight);
-                std::cout << "\t" << point.transpose() << " -> " << weight << "\n";
+                std::cout << "\t" << point.transpose() << " -> " << weight
+                          << "\n";
                 std::push_heap(
                     candidates.begin(), candidates.end(), heap_function);
             }
-            for(auto& p : candidates){
+            for (auto& p : candidates) {
                 std::cout << p->get_weight() << "  ";
             }
             std::cout << "\n";
@@ -125,14 +131,16 @@ class Domain {
                 auto current_candidate = candidates.back();
                 candidates.pop_back();
                 auto current_pos = current_candidate->get_position();
-                std::cout << "Visiting true candidate on: "<< current_pos.transpose() <<"\n";
+                std::cout << "Visiting true candidate on: "
+                          << current_pos.transpose() << "\n";
                 bool skip = false;
                 for (auto selected_candidate : step_leaders) {
-
                     auto selected_pos = selected_candidate->get_position();
                     double dist = physics::get_euclidean_distance(
                         current_pos, selected_pos);
-                    std::cout << "\ttesting against: "<< selected_pos.transpose() << " : dist =" << dist <<"\n";
+                    std::cout
+                        << "\ttesting against: " << selected_pos.transpose()
+                        << " : dist =" << dist << "\n";
                     skip = dist < R;
                 }
                 if (!skip) {
@@ -142,9 +150,9 @@ class Domain {
 
             for (auto selected_candidate : step_leaders) {
                 current_leader->add_child(selected_candidate);
-                double min_distance_to_end = this->get_smallest_distance_to_end_point(
-                    selected_candidate->get_position()
-                );
+                double min_distance_to_end =
+                    this->get_smallest_distance_to_end_point(
+                        selected_candidate->get_position());
                 if (min_distance_to_end < distance_to_end) {
                     reached_destination = true;
                 }

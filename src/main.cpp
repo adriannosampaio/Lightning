@@ -19,7 +19,6 @@ int main(int argc, char** argv) {
     parser.addArgument("-f", true, true, "input light file");
     parser.addArgument("-o", true, false, "Output png file");
 
-    
     parser.addArgument(
         "-S", true, false, "Size of each lightning segment in number of ");
     parser.addArgument(
@@ -29,8 +28,7 @@ int main(int argc, char** argv) {
         "Number of preliminary candidates generated per point");
     parser.addArgument(
         "-N", true, false, "Max number of true candidates accepted per point");
-    parser.addArgument(
-        "-I", true, false, "Max number of iterations");
+    parser.addArgument("-I", true, false, "Max number of iterations");
     parser.addArgument(
         "-R", true, false, "Minimum distance between true candidate points");
     parser.addArgument(
@@ -59,16 +57,14 @@ int main(int argc, char** argv) {
             params->minimum_candidate_distance =
                 parser.getArgument<double>("-R");
         if (parser.isDefined("-I"))
-            params->max_iterations =
-                parser.getArgument<double>("-I");
+            params->max_iterations = parser.getArgument<double>("-I");
         if (parser.isDefined("-D"))
             params->accepted_distance_to_end_point =
                 parser.getArgument<double>("-D");
-        
+
         double noise = 0.2;
         if (parser.isDefined("--noise"))
-            noise =
-                parser.getArgument<double>("--noise");
+            noise = parser.getArgument<double>("--noise");
         params->noise = noise;
 
         std::shared_ptr<graphics::Renderer> renderer =
@@ -78,11 +74,11 @@ int main(int argc, char** argv) {
         std::array<int, 2> grid_dimensions = {
             domain->get_parameters()->number_of_cells[0],
             domain->get_parameters()->number_of_cells[2]};
-        //auto f = std::make_shared<graphics::Field>(
-        //    grid_dimensions, field_data, physics::MAX_POTENTIAL, 0, -1);
-        // Add the field graphics object to the renderer
-        //renderer->add_renderable(f);
-        // Generate an image
+        // auto f = std::make_shared<graphics::Field>(
+        //     grid_dimensions, field_data, physics::MAX_POTENTIAL, 0, -1);
+        //  Add the field graphics object to the renderer
+        // renderer->add_renderable(f);
+        //  Generate an image
 
         auto l = domain->generate_path();
         for (auto line : l->get_lines(params)) renderer->add_renderable(line);

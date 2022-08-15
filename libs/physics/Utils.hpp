@@ -1,9 +1,8 @@
 #pragma once
 
-#include <cmath>
 #include <Eigen/Dense>
+#include <cmath>
 #include <vector>
-
 
 namespace physics {
 /**
@@ -47,7 +46,7 @@ constexpr double PI = 3.1415926535897932;
 constexpr double SQRT_5 = 2.2360679775;
 
 /** Golden angle in radians
-*/
+ */
 constexpr double PHI = PI * (3.0 - SQRT_5);
 
 inline double degrees_to_radians(double degrees) { return degrees * PI / 180; }
@@ -86,20 +85,22 @@ inline Eigen::Vector3d generate_random_point_in_sphere(double radius = 1.0) {
 }
 
 inline std::vector<Eigen::Vector3d> generate_fibonacci_sphere(
-    const Eigen::Vector3d& center, double radius_, unsigned number_of_points) 
-{
+    const Eigen::Vector3d& center, double radius_, unsigned number_of_points) {
     std::vector<Eigen::Vector3d> points;
     points.reserve(number_of_points);
     for (size_t point = 0; point < number_of_points; point++) {
         double y = 1 - (point / static_cast<double>(number_of_points - 1)) * 2;
-        double radius = std::sqrt(1 - y * y); //#radius at y
+        double radius = std::sqrt(1 - y * y);  //#radius at y
 
-        double theta = PHI * point; //golden angle increment
+        double theta = PHI * point;  // golden angle increment
 
         double x = std::cos(theta) * radius;
         double z = std::sin(theta) * radius;
 
-        points.emplace_back(radius_ * x + center[0], radius_ * y + center[1], radius_ * z + center[2]);
+        points.emplace_back(
+            radius_ * x + center[0],
+            radius_ * y + center[1],
+            radius_ * z + center[2]);
     }
     return points;
 }

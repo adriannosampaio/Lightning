@@ -1,8 +1,9 @@
 #pragma once
 #include <Eigen/Dense>
-#include "Utils.hpp"
 #include <memory>
 #include <vector>
+
+#include "Utils.hpp"
 
 struct DomainParameters {
     Eigen::Vector3d dimensions;
