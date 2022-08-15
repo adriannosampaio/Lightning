@@ -69,25 +69,10 @@ int main(int argc, char** argv) {
         if (parser.isDefined("--noise"))
             noise =
                 parser.getArgument<double>("--noise");
-
+        params->noise = noise;
 
         std::shared_ptr<graphics::Renderer> renderer =
             std::make_shared<graphics::Renderer>();
-
-        // Set domain parameters
-        // auto params = DomainParameters(
-        //    Eigen::Vector3d{200, 1, 150}, Eigen::Vector3i{400, 1, 300});
-        //// Create domain
-        // Domain d(params);
-        //// Add electric charges
-        // d.add_charge(Eigen::Vector3d{10, 0, 10}, 10000);
-        // d.add_charge(Eigen::Vector3d{10, 0, 100}, 10000);
-        // d.add_charge(Eigen::Vector3d{150, 0, 100}, -10000);
-        //// Generate the electric potential field
-        // d.generate_field();
-
-        //auto domain = setup_domain(parser.getArgument<std::string>("-f"));
-        //domain->generate_field();
 
         // Convert Electric field into a Field graphics object
         std::array<int, 2> grid_dimensions = {
@@ -107,8 +92,6 @@ int main(int argc, char** argv) {
                 parser.getArgument<std::string>("-o"), 800, 600);
         else
             renderer->run("Window", 800, 600);
-        //renderer->generate_image(
-        //    parser.getArgument<std::string>("-o"), 400, 300);
 
         std::map<std::string, int> m;
         m["test"] = 1;

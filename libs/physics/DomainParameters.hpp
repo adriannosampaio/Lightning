@@ -9,6 +9,7 @@ struct DomainParameters {
     Eigen::Vector3i number_of_cells;
     Eigen::Vector3d cell_dimensions;
     Eigen::Vector3d cell_center_offset;
+    double noise = 0.2;
     double max_cell_dimension;
     int number_of_cells_in_xy_plane;
     int new_points_per_leader = 30;

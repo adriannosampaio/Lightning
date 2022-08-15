@@ -17,14 +17,17 @@ class PathPoint {
      *
      */
     std::vector<std::shared_ptr<PathPoint>> _children;
-
+    double _weight;
     Eigen::Vector3d _position;
 
    public:
     PathPoint() = delete;
     PathPoint(double x, double y, double z);
+    explicit PathPoint(const Eigen::Vector3d& vec);
     void add_child(std::shared_ptr<PathPoint> path_point);
-    Eigen::Vector3d& get_position() { return _position; }
+    const Eigen::Vector3d& get_position() { return _position; }
+    double get_weight() { return _weight; }
+    void set_weight(double weight) { _weight = weight; }
     std::shared_ptr<PathPoint> get_child(unsigned idx) {
         return _children[idx];
     }
