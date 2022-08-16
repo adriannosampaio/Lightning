@@ -44,8 +44,7 @@ int main(int argc, char** argv) {
     try {
         parser.parse();
 
-        auto domain = setup_domain(parser.getArgument<std::string>("-f"));
-        auto params = domain->get_parameters();
+        auto [domain, params] = setup_domain(parser.getArgument<std::string>("-f"));
         if (parser.isDefined("-S"))
             params->lightning_segment_size = parser.getArgument<double>("-S");
         if (parser.isDefined("-M"))
@@ -70,17 +69,7 @@ int main(int argc, char** argv) {
         std::shared_ptr<graphics::Renderer> renderer =
             std::make_shared<graphics::Renderer>();
 
-        // Convert Electric field into a Field graphics object
-        std::array<int, 2> grid_dimensions = {
-            domain->get_parameters()->number_of_cells[0],
-            domain->get_parameters()->number_of_cells[2]};
-        // auto f = std::make_shared<graphics::Field>(
-        //     grid_dimensions, field_data, physics::MAX_POTENTIAL, 0, -1);
-        //  Add the field graphics object to the renderer
-        // renderer->add_renderable(f);
-        //  Generate an image
-
-        auto l = domain->generate_path();
+        auto l = domain->generate_path(*params);
         for (auto line : l->get_lines(params)) renderer->add_renderable(line);
         // Generate an image
         if (parser.isDefined("-o"))
