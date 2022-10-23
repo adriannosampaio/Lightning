@@ -2,7 +2,7 @@
 #include <Eigen/Dense>
 
 #include "Utils.hpp"
-namespace physics {
+namespace core {
 
 struct ElectricCharge {
     Eigen::Vector3d position;
@@ -15,7 +15,7 @@ struct ElectricCharge {
     inline double get_electric_potential(
         const Eigen::Vector3d& affected_position) const {
         double distance_from_cell = (affected_position - position).norm();
-        return physics::COULUMBS_CONSTANT * (charge / distance_from_cell);
+        return core::COULUMBS_CONSTANT * (charge / distance_from_cell);
     }
 
     ~ElectricCharge() {}
