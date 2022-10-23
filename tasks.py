@@ -45,7 +45,7 @@ def clean(c):
         c.run(f"rm -rf build/*")
 
 @task
-def test(c, pattern=None, verbose=False, force_regen=False):
+def test(c, pattern=None, verbose=False, force_regen=False, num_threads="auto"):
     ''' Run all tests in the suite. It also allows for custom
         test selection and verbosity configuration
 
@@ -62,7 +62,8 @@ def test(c, pattern=None, verbose=False, force_regen=False):
                 f'{"-s" if verbose else ""} {"-k" if pattern is not None else ""}',
                 f'{pattern or ""}',
                 '--basetemp=tmp',
-		f'{"--force-regen" if force_regen else ""}'
+		        f'{"--force-regen" if force_regen else ""}',
+                f'-n {num_threads}'
             ]), 
             pty=True
         )

@@ -26,6 +26,7 @@ dependencies:
   - pillow
   - numpy
   - pytest-cpp
+  - pytest-xdist
   - pip:
     - pre-commit
 

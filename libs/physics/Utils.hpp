@@ -72,7 +72,7 @@ inline Eigen::Vector3d spherical_to_cartesian(
 }
 
 /**
- * @brief
+ * @briefw
  *
  * @param radius
  * @return Eigen::Vector3d
