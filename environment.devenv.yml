@@ -22,7 +22,6 @@ dependencies:
   - pytest-regressions
   - clang-format
   - ninja
-  - gcc
   - pillow
   - numpy
   - pytest-cpp

@@ -3,6 +3,8 @@
 #include <SDL_image.h>
 #include <SDL_timer.h>
 
+#include <string>
+#include <array>
 #include <memory>
 #include <utility>
 
@@ -52,7 +54,7 @@ class Window {
      * @brief Construct a new Window object
      *
      */
-    Window();
+    Window() = delete;
 
     /**
      * @brief Construct a new Window object and allocate

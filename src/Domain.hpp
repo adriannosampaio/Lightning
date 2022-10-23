@@ -76,7 +76,7 @@ class Domain {
             };
 
             // Generate random points
-            std::cout << "Generating preliminary candidates\n";
+            //std::cout << "Generating preliminary candidates\n";
             std::vector<std::shared_ptr<PathPoint>> candidates;
             int num_leaders = step_leaders_to_explore.size();
             candidates.reserve(M * num_leaders);
@@ -107,17 +107,17 @@ class Domain {
                     next_candidate->level = current_leader->level + 1;
                     candidates.push_back(next_candidate);
                     maximum_level = std::max(candidates.back()->level, maximum_level);
-                    std::cout << "\t" << point.transpose() << " -> " << weight
-                            << "\n";
+                    //std::cout << "\t" << point.transpose() << " -> " << weight
+                    //        << "\n";
                     std::push_heap(
                         candidates.begin(), candidates.end(), heap_function);
                 }
                     
             }
-            for (auto& p : candidates) {
-                std::cout << p->get_weight() << "  ";
-            }
-            std::cout << "\n";
+            //for (auto& p : candidates) {
+            //    std::cout << p->get_weight() << "  ";
+            //}
+            //std::cout << "\n";
 
             if (candidates.size() == 0) continue;
             // Get N candidates
@@ -133,16 +133,16 @@ class Domain {
                 auto current_candidate = candidates.back();
                 candidates.pop_back();
                 auto current_pos = current_candidate->get_position();
-                std::cout << "Visiting true candidate on: "
-                          << current_pos.transpose() << "\n";
+                //std::cout << "Visiting true candidate on: "
+                //          << current_pos.transpose() << "\n";
                 bool skip = false;
                 for (auto selected_candidate : step_leaders) {
                     auto selected_pos = selected_candidate->get_position();
                     double dist = physics::get_euclidean_distance(
                         current_pos, selected_pos);
-                    std::cout
-                        << "\ttesting against: " << selected_pos.transpose()
-                        << " : dist =" << dist << "\n";
+                    //std::cout
+                    //    << "\ttesting against: " << selected_pos.transpose()
+                    //    << " : dist =" << dist << "\n";
                     skip = dist < R;
                 }
                 if (!skip) {

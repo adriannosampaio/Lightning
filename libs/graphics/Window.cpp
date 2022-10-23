@@ -1,7 +1,6 @@
 #include "Window.hpp"
 
 namespace graphics {
-
 Window::Window(const std::string& title, unsigned width, unsigned height) :
     _dimensions({width, height}),
     // creates a window

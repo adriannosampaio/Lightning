@@ -1,7 +1,10 @@
 from invoke import task
 import os
 from pathlib import Path
+import platform
 
+
+platform = platform.system()
 build_path = Path(os.getenv("LIGHTNING_BUILD_DIR")).as_posix()
 root_path = Path(os.getenv("LIGHTNING_ROOT")).as_posix()
 
@@ -29,14 +32,17 @@ def configure(c, mode="Debug"):
     os.makedirs(build_path, exist_ok=True)
     with c.cd(str(build_path)):
         c.run('mkdir -p install')
-        generator = f'-G Ninja'
+        generator = f'-G Ninja' if platform == "Linux" else ""
         c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install {generator} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
 @task(pre=[configure])
 def build(c):
-    print("Building!")
-    with c.cd(str(build_path)): 
-        c.run(f"ninja -j0 && ninja install")
+    if platform == 'Windows':
+        print("Nothing to do!")
+    else:
+        print("Building!")
+        with c.cd(str(build_path)): 
+            c.run(f"ninja -j0 && ninja install")
 
 @task
 def clean(c):
