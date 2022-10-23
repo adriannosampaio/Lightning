@@ -35,7 +35,7 @@ class UnitTest(Test):
 
 class CaseTest(Test):
 	def __init__(self, arguments, output_file) -> None:
-		self.executable = f'{os.getenv("LIGHTNING_BIN_DIR")}/Lightning'
+		self.executable = f'{os.getenv("LIGHTNING_BIN_DIR")}/zeus'
 		self.arguments = arguments
 		self.output_file = output_file
 

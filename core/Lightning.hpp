@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "PathPoint.hpp"
-#include "graphics/Renderable.hpp"
-#include "physics/DomainParameters.hpp"
+#include "Renderable.hpp"
+#include "DomainParameters.hpp"
 
 class Lightning {
    private:

@@ -5,12 +5,14 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <string>
 
 #include "Domain.hpp"
+#include "DomainParameters.hpp"
 #include "Lightning.hpp"
 #include "PathPoint.hpp"
-#include "graphics/Graphics.hpp"
-#include "physics/Utils.hpp"
+#include "Utils.hpp"
+#include "Graphics.hpp"
 
 int main(int argc, char** argv) {
     graphics::initialize();

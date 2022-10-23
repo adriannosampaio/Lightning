@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 
-namespace physics {
+namespace core {
 /**
  * @brief Coulumb's constant for use in the electric equations
  */

@@ -64,9 +64,9 @@ struct DomainParameters {
     inline Eigen::Vector3d clamp_coordinates_to_boundary(
         const Eigen::Vector3d& coords) const {
         return {
-            physics::clamp(coords[0], 0.0, dimensions[0]),
-            physics::clamp(coords[1], 0.0, dimensions[1]),
-            physics::clamp(coords[2], 0.0, dimensions[2])};
+            core::clamp(coords[0], 0.0, dimensions[0]),
+            core::clamp(coords[1], 0.0, dimensions[1]),
+            core::clamp(coords[2], 0.0, dimensions[2])};
     }
 
     inline bool is_inside(const Eigen::Vector3d& coords) const {
