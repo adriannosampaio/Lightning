@@ -18,6 +18,8 @@ add_subdirectory(deps)
 # graphics library
 add_subdirectory(graphics)
 add_subdirectory(core)
+add_subdirectory(bindings)
+
 
 file(GLOB SOURCES src/main.cpp)
 add_executable (zeus ${SOURCES})
@@ -25,4 +27,7 @@ target_include_directories(zeus PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUD
 target_link_libraries(zeus PUBLIC  ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 target_include_directories(zeus PRIVATE libs core)
 target_link_libraries(zeus PUBLIC Eigen3::Eigen Graphics Core SimpleArgParser)
+SET(CMAKE_INSTALL_RPATH $ENV{CONDA_PREFIX}/Library/bin)
 install(TARGETS zeus DESTINATION bin)
+#message(file(GET_RUNTIME_DEPENDENCIES))
+include(CPack)

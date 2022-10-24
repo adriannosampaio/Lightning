@@ -20,6 +20,8 @@ struct DomainParameters {
     double accepted_distance_to_end_point;
     unsigned max_iterations = 5000;
 
+    DomainParameters() {}
+
     DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
         dimensions(dims),
         number_of_cells(ncs),

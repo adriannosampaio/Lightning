@@ -26,6 +26,8 @@ dependencies:
   - numpy
   - pytest-cpp
   - pytest-xdist
+  - nsis=3.08 # [win]
+  - pybind11
   - pip:
     - pre-commit
 
