@@ -6,18 +6,12 @@ namespace core {
 
 struct ElectricCharge {
     Eigen::Vector3d position;
-    double charge;
+    bool is_negative;
 
-    ElectricCharge(Eigen::Vector3d position, double charge) :
-        position(position), charge(charge) {}
+    ElectricCharge(Eigen::Vector3d position, bool is_negative) :
+        position(position), is_negative(is_negative) {}
 
     inline const Eigen::Vector3d& get_position() { return position; }
-    inline double get_electric_potential(
-        const Eigen::Vector3d& affected_position) const {
-        double distance_from_cell = (affected_position - position).norm();
-        return core::COULUMBS_CONSTANT * (charge / distance_from_cell);
-    }
-
     ~ElectricCharge() {}
 };
 

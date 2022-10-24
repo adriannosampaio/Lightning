@@ -12,7 +12,7 @@ std::shared_ptr<Lightning> Domain::generate_path(const DomainParameters& params)
     auto middle_point_it = std::stable_partition(
         _charges.begin(),
         _charges.end(),
-        [](const core::ElectricCharge& q) -> bool { return q.charge < 0; });
+        [](const core::ElectricCharge& q) -> bool { return q.is_negative; });
     _positive_charges_start = middle_point_it;
     // Selecting a random starting point from
     int root_id =
@@ -50,9 +50,6 @@ std::shared_ptr<Lightning> Domain::generate_path(const DomainParameters& params)
             auto points = core::generate_fibonacci_sphere(
                 leader_position, segment_length, M);
             for (auto& point : points) {
-                if (!params.is_inside(point)) {
-                    point = params.clamp_coordinates_to_boundary(point);
-                }
                 double rand_float = static_cast<double>(rand()) / RAND_MAX;
                 double noise_variance =
                     params.noise ? 1 + fmod(rand_float, params.noise) : 1;
@@ -183,7 +180,7 @@ std::pair<std::shared_ptr<Domain>, std::shared_ptr<DomainParameters>>
                     "adding a new charge");
             double x, y, z, q;
             file >> x >> y >> z >> q;
-            domain->add_charge(Eigen::Vector3d{x, y, z}, q);
+            domain->add_charge(Eigen::Vector3d{x, y, z}, q < 0);
         }
 
         if (filled_dimensions && filled_cells && !domain_created) {
