@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     graphics::initialize();
 
     parser::ArgumentParser parser(argc, argv);
-    parser.addArgument("-f", true, true, "input light file");
+    parser.addArgument("-f", true, false, "input light file");
     parser.addArgument("-o", true, false, "Output png file");
 
     parser.addArgument(
@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
             std::make_shared<graphics::Renderer>();
 
         auto l = domain->generate_path(*params);
-        for (auto line : graphics::get_lines(params, l->get_root())) renderer->add_renderable(line);
+        for (auto line : graphics::get_lines(*params, l->get_root())) renderer->add_renderable(line);
         // Generate an image
         if (parser.isDefined("-o"))
             renderer->generate_image(

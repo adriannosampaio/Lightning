@@ -14,7 +14,7 @@ namespace graphics {
 void initialize();
 
 std::vector<std::shared_ptr<Line>> get_lines(
-        const std::shared_ptr<DomainParameters> params,
+        DomainParameters& params,
         std::shared_ptr<PathPoint> _root) ;
 
 void finalize();
