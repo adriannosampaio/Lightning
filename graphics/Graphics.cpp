@@ -1,5 +1,5 @@
 #include <queue>
-
+#include <unordered_map>
 #include <SDL.h>
 
 #include "Graphics.hpp"
@@ -10,7 +10,36 @@ namespace graphics {
 
 void initialize() { SDL_Init(SDL_INIT_EVERYTHING); }
 
-std::vector<std::shared_ptr<graphics::Line>> get_lines(
+
+std::unordered_map<unsigned, std::vector<std::shared_ptr<graphics::Line>>> get_lines(
+        DomainParameters& params,
+        std::shared_ptr<PathPoint> _root) 
+{
+    std::unordered_map<unsigned, std::vector<std::shared_ptr<graphics::Line>>> result;
+    std::queue<std::shared_ptr<PathPoint>> queue;
+    queue.push(_root);
+    while (!queue.empty()) {
+        auto current = queue.front();
+        //auto current_pos = params.coords_to_cell(current->get_position());
+        auto current_pos = current->get_position();
+        queue.pop();
+        for (auto child : current->get_children()) {
+            queue.push(child);
+            auto child_pos = child->get_position();
+            result[current->level].push_back(std::make_shared<graphics::Line>(
+                std::array<int, 2>{
+                    static_cast<int>(current_pos[0]),
+                    static_cast<int>(current_pos[2])},
+                std::array<int, 2>{
+                    static_cast<int>(child_pos[0]),
+                    static_cast<int>(child_pos[2])}));
+        }
+    }
+    return result;
+}
+
+
+std::vector<std::shared_ptr<graphics::Line>> get_lines_simple(
         DomainParameters& params,
         std::shared_ptr<PathPoint> _root) {
     std::vector<std::shared_ptr<graphics::Line>> result;
@@ -30,7 +59,8 @@ std::vector<std::shared_ptr<graphics::Line>> get_lines(
                     static_cast<int>(current_pos[2])},
                 std::array<int, 2>{
                     static_cast<int>(child_pos[0]),
-                    static_cast<int>(child_pos[2])}));
+                    static_cast<int>(child_pos[2])},
+                current->level));
         }
     }
     return result;

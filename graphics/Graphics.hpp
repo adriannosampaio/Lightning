@@ -13,7 +13,11 @@ namespace graphics {
 
 void initialize();
 
-std::vector<std::shared_ptr<Line>> get_lines(
+std::unordered_map<unsigned, std::vector<std::shared_ptr<graphics::Line>>> get_lines(
+        DomainParameters& params,
+        std::shared_ptr<PathPoint> _root) ;
+
+std::vector<std::shared_ptr<Line>> get_lines_simple(
         DomainParameters& params,
         std::shared_ptr<PathPoint> _root) ;
 

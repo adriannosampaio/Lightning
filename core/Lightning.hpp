@@ -12,7 +12,7 @@ class Lightning {
     std::shared_ptr<PathPoint> _root;
 
    public:
-    
+    int max_level;
     explicit Lightning(std::shared_ptr<PathPoint> root) : _root(root) {}
     std::shared_ptr<PathPoint> get_root() { return _root; }
 

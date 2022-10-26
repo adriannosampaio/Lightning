@@ -137,7 +137,9 @@ std::shared_ptr<Lightning> Domain::generate_path(const DomainParameters& params)
         pointer->is_main_branch = true;
     }
 
-    return std::make_shared<Lightning>(root);
+    auto res = std::make_shared<Lightning>(root);
+    res->max_level = maximum_level;
+    return res;
 }
 
 void Domain::generate_paths(const DomainParameters& params, unsigned number_of_paths) {
