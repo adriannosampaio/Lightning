@@ -39,9 +39,8 @@ def configure(c, mode="Debug"):
     os.makedirs(build_path, exist_ok=True)
     with c.cd(str(build_path)):
         c.run('mkdir -p install')
-        generator = f'-G Ninja' if platform == "Linux" else ""
         last_build_mode = mode
-        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install {generator} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
 @task(pre=[clean, configure])
 def build(c, mode=last_build_mode):
@@ -50,7 +49,7 @@ def build(c, mode=last_build_mode):
         if platform == 'Windows':
             c.run(f"cmake --build . --target install --config {mode}")
         else:
-            c.run(f"ninja && ninja install")
+            c.run(f"make && make install")
 
 
 @task
