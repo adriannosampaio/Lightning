@@ -21,8 +21,12 @@ class Domain {
    public:
     explicit Domain() {}
 
-    void add_charge(const Eigen::Vector3d& position, double charge) {
-        _charges.emplace_back(position, charge);
+    void add_charge(const Eigen::Vector3d& position, bool is_negative) {
+        _charges.emplace_back(position, is_negative);
+    }
+
+    void set_charges(const std::vector<core::ElectricCharge>& charges) {
+        _charges = charges;
     }
 
     double get_smallest_distance_to_end_point(

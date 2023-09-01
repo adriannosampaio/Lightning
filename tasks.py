@@ -27,28 +27,30 @@ def doxygen(c):
 
 
 @task
+def clean(c):
+    print("Cleaning!")
+    with c.cd(root_path):
+        c.run(f"rm -rf build/*")
+
+last_build_mode="Debug"
+@task
 def configure(c, mode="Debug"):
     print(str(f'"{build_path}"'))
     os.makedirs(build_path, exist_ok=True)
     with c.cd(str(build_path)):
         c.run('mkdir -p install')
-        generator = f'-G Ninja' if platform == "Linux" else ""
-        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install {generator} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+        last_build_mode = mode
+        c.run(f"cmake .. -DCMAKE_BUILD_TYPE={mode} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
 
-@task(pre=[configure])
-def build(c):
-    if platform == 'Windows':
-        print("Nothing to do!")
-    else:
+@task(pre=[clean, configure])
+def build(c, mode=last_build_mode):
+    with c.cd(str(build_path)): 
         print("Building!")
-        with c.cd(str(build_path)): 
-            c.run(f"ninja -j0 && ninja install")
+        if platform == 'Windows':
+            c.run(f"cmake --build . --target install --config {mode}")
+        else:
+            c.run(f"make && make install")
 
-@task
-def clean(c):
-    print("Cleaning!")
-    with c.cd(root_path):
-        c.run(f"rm -rf build/*")
 
 @task
 def test(c, pattern=None, verbose=False, force_regen=False, num_threads="auto"):
@@ -71,5 +73,5 @@ def test(c, pattern=None, verbose=False, force_regen=False, num_threads="auto"):
 		        f'{"--force-regen" if force_regen else ""}',
                 f'-n {num_threads}'
             ]), 
-            pty=True
+            pty=platform=="Linux"
         )

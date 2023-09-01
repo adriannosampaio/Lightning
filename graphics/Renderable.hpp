@@ -16,6 +16,7 @@ class Renderable {
    public:
     Renderable(int lifetime);
     ~Renderable();
+    int get_lifetime() {return _lifetime;}
     void reduce_lifetime();
     virtual void render(SDL_Renderer* renderer) const = 0;
 };

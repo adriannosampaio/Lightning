@@ -10,15 +10,17 @@ struct DomainParameters {
     Eigen::Vector3i number_of_cells;
     Eigen::Vector3d cell_dimensions;
     Eigen::Vector3d cell_center_offset;
-    double noise = 0.2;
+    float noise = 0.2f;
     double max_cell_dimension;
     int number_of_cells_in_xy_plane;
     int new_points_per_leader = 30;
     int maximum_accepted_candidates = 3;
-    double minimum_candidate_distance = 10;
-    double lightning_segment_size;
-    double accepted_distance_to_end_point;
-    unsigned max_iterations = 5000;
+    float minimum_candidate_distance = 10.0f;
+    float lightning_segment_size = 10.0f;
+    float accepted_distance_to_end_point = 10.0f;
+    int max_iterations = 5000;
+
+    DomainParameters() {}
 
     DomainParameters(Eigen::Vector3d dims, Eigen::Vector3i ncs) :
         dimensions(dims),
